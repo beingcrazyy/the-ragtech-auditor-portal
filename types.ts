@@ -1,4 +1,20 @@
-export enum AuditStatus {
+
+export enum CompanyState {
+  ONBOARDING = 'ONBOARDING',
+  READY_TO_AUDIT = 'READY_TO_AUDIT',
+  AUDIT_IN_PROGRESS = 'AUDIT_IN_PROGRESS',
+  COMPLIANT = 'COMPLIANT',
+  NON_COMPLIANT = 'NON_COMPLIANT'
+}
+
+export enum DocumentState {
+  UPLOADING = 'UPLOADING',
+  PROCESSING = 'PROCESSING',
+  READY = 'READY',
+  ERROR = 'ERROR'
+}
+
+export enum AuditRunStatus {
   QUEUED = 'QUEUED',
   RUNNING = 'RUNNING',
   COMPLETED = 'COMPLETED',
@@ -23,17 +39,22 @@ export interface Company {
   country: string;
   createdDate: string;
   documentCount: number;
-  lastAuditStatus: FindingStatus | null;
+  state: CompanyState; // Explicit State Machine field
+  lastAuditDate?: string;
 }
 
 export interface Document {
   id: string;
   name: string;
   type: string;
+  extension: string;
   uploadedDate: string;
-  status: 'Uploaded' | 'Processing' | 'Failed';
+  status: DocumentState; // Explicit State Machine field
   companyId: string;
   summary?: string;
+  url?: string;
+  uploadProgress?: number;
+  errorMessage?: string;
 }
 
 export interface Finding {
@@ -49,7 +70,7 @@ export interface Audit {
   id: string;
   companyId: string;
   date: string;
-  status: AuditStatus;
+  status: AuditRunStatus; // Explicit State Machine field
   summary: string;
   metrics: {
     hardFailures: number;
@@ -57,6 +78,7 @@ export interface Audit {
     confidenceScore: number;
   };
   findings: Finding[];
+  progress?: number;
 }
 
 export interface User {

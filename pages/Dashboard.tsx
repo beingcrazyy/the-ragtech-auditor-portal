@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, Badge, Button } from '../components/Shared';
 import { Building2, FileText, Activity, AlertTriangle, ArrowRight, PlayCircle } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { Company } from '../types';
+import { Company, CompanyState } from '../types';
 
 const data = [
   { name: 'Jan', completed: 4, failed: 1 },
@@ -138,8 +138,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ companies, onNavigate }) =
                             </td>
                             <td className="px-6 py-5 text-slate-500 font-medium">{c.industry}</td>
                             <td className="px-6 py-5">
-                                <Badge color={c.lastAuditStatus === 'VERIFIED' ? 'green' : c.lastAuditStatus === 'FAILED' ? 'red' : 'gray'}>
-                                    {c.lastAuditStatus || 'Pending'}
+                                <Badge color={c.state === CompanyState.COMPLIANT ? 'green' : c.state === CompanyState.NON_COMPLIANT ? 'red' : 'gray'}>
+                                    {c.state.replace(/_/g, ' ')}
                                 </Badge>
                             </td>
                         </tr>

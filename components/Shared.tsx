@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Loader2, ChevronDown } from 'lucide-react';
 
@@ -98,12 +99,30 @@ export const Select: React.FC<SelectProps> = ({ label, error, options, className
 );
 
 // --- Modal ---
-export const Modal: React.FC<{ isOpen: boolean; onClose: () => void; title: string; children: React.ReactNode }> = ({ isOpen, onClose, title, children }) => {
+interface ModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    title: string;
+    children: React.ReactNode;
+    maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
+}
+
+export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, maxWidth = 'lg' }) => {
   if (!isOpen) return null;
+
+  const widthClass = {
+      sm: 'max-w-sm',
+      md: 'max-w-md',
+      lg: 'max-w-lg',
+      xl: 'max-w-xl',
+      '2xl': 'max-w-4xl',
+      'full': 'max-w-[90vw]'
+  }[maxWidth];
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md">
-      <div className="bg-white rounded-[32px] shadow-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-200 relative">
-        <div className="px-8 py-6 border-b border-slate-50 flex justify-between items-center bg-white">
+      <div className={`bg-white rounded-[32px] shadow-2xl w-full ${widthClass} overflow-hidden animate-in fade-in zoom-in duration-200 relative flex flex-col max-h-[90vh]`}>
+        <div className="px-8 py-6 border-b border-slate-50 flex justify-between items-center bg-white flex-shrink-0">
           <h3 className="text-xl font-bold text-slate-900 tracking-tight">{title}</h3>
           <button onClick={onClose} className="p-2 bg-slate-50 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors">
             <span className="sr-only">Close</span>
@@ -112,7 +131,7 @@ export const Modal: React.FC<{ isOpen: boolean; onClose: () => void; title: stri
             </svg>
           </button>
         </div>
-        <div className="p-6 md:p-8">
+        <div className="p-6 md:p-8 overflow-y-auto">
           {children}
         </div>
       </div>

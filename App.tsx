@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Layout } from './components/Layout';
 import { Login } from './pages/Login';
@@ -6,6 +7,7 @@ import { CompanyList } from './pages/CompanyList';
 import { AIChat } from './pages/AIChat';
 import { Company } from './types';
 import { api } from './services/mockData';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -23,8 +25,12 @@ const App = () => {
   }, [isAuthenticated]);
 
   const loadInitialData = async () => {
-    const data = await api.getCompanies();
-    setCompanies(data);
+    try {
+        const data = await api.getCompanies();
+        setCompanies(data);
+    } catch (e) {
+        console.error("Failed to load initial data", e);
+    }
   };
 
   const handleNavigate = (tab: string) => {
@@ -81,14 +87,16 @@ const App = () => {
   }
 
   return (
-    <Layout
-      activeTab={activeTab}
-      onNavigate={handleNavigate}
-      onLogout={() => setIsAuthenticated(false)}
-      user={user}
-    >
-      {renderContent()}
-    </Layout>
+    <ErrorBoundary>
+        <Layout
+        activeTab={activeTab}
+        onNavigate={handleNavigate}
+        onLogout={() => setIsAuthenticated(false)}
+        user={user}
+        >
+        {renderContent()}
+        </Layout>
+    </ErrorBoundary>
   );
 };
 

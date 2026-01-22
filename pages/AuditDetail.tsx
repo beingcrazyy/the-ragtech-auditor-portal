@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Button, Badge } from '../components/Shared';
-import { Company, Document, Audit, AuditStatus, FindingSeverity, FindingStatus } from '../types';
+import { Company, Document, Audit, AuditRunStatus, FindingSeverity, FindingStatus } from '../types';
 import { api } from '../services/mockData';
 import { ArrowLeft, Play, UploadCloud, CheckCircle2, XCircle, AlertCircle, FileText, Loader2, Activity } from 'lucide-react';
 
@@ -53,7 +53,7 @@ export const AuditDetail: React.FC<AuditDetailProps> = ({ companyId, onBack }) =
         // Fetch the "completed" audit (mocking the backend finishing)
         const completedAudit: Audit = {
             ...audit,
-            status: AuditStatus.COMPLETED,
+            status: AuditRunStatus.COMPLETED,
             summary: `Audit completed for ${company?.name}. The system analyzed ${documents.length} documents. Overall compliance is strong, but there are minor discrepancies in the AML policy versioning compared to the internal controls register. Financial data appears consistent.`,
             metrics: {
                 hardFailures: 0,
